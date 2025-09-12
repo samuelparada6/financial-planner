@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -9,7 +9,14 @@ import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import './App.css'
 
-function App() {
+export default function App() {
+  // State to track amount entered in.
+  const [amount, setAmount] = useState(0);
+
+  function handleChange(value) {
+    setAmount(value);
+    console.log('Changed! Here it is: ' + value);
+  }
 
   return (
     <>
@@ -20,6 +27,8 @@ function App() {
             id="outlined-adornment-amount"
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
             label="Amount"
+            value={amount}
+            onChange={(e) => handleChange(e.target.value)}
           />
         </FormControl>
       </div>
@@ -36,5 +45,3 @@ function App() {
     </>
   )
 }
-
-export default App
