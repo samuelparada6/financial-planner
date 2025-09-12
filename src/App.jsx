@@ -3,6 +3,10 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
 import './App.css'
 
 function App() {
@@ -18,6 +22,16 @@ function App() {
             label="Amount"
           />
         </FormControl>
+      </div>
+      <div>
+        <Stack direction="row" spacing={2} sx={{ m: 1 }}>
+          <Button variant="outlined" startIcon={<DeleteIcon />}>
+            Cancel
+          </Button>
+          <Button variant="contained" endIcon={<SendIcon />}>
+            Enter
+          </Button>
+        </Stack>
       </div>
     </>
   )
