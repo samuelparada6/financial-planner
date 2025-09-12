@@ -11,11 +11,27 @@ import './App.css'
 
 export default function App() {
   // State to track amount entered in.
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [enteredAmount, setEnteredAmount] = useState("");
+  const [showAmount, setShowAmount] = useState(false);
 
+  // Handles input change
   function handleChange(value) {
     setAmount(value);
-    console.log('Changed! Here it is: ' + value);
+    // console.log('Changed! Here it is: ' + value);
+  }
+
+  // Handles Enter
+  function handleEnter() {
+    setEnteredAmount(amount);
+    setAmount("");
+    setShowAmount(true);
+  }
+
+  // Handles Cancel
+  function handleCancel() {
+    setAmount("");
+    setShowAmount(false);
   }
 
   return (
@@ -34,14 +50,20 @@ export default function App() {
       </div>
       <div>
         <Stack direction="row" spacing={2} sx={{ m: 1 }}>
-          <Button variant="outlined" startIcon={<DeleteIcon />}>
+          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleCancel}>
             Cancel
           </Button>
-          <Button variant="contained" endIcon={<SendIcon />}>
+          <Button variant="contained" endIcon={<SendIcon />} onClick={handleEnter}>
             Enter
           </Button>
         </Stack>
       </div>
+      {showAmount && (
+        <Button color="success" sx={{ m: 1 }}>
+          {enteredAmount}
+        </Button>
+      )
+      }
     </>
   )
 }
