@@ -63,6 +63,10 @@ export default function App() {
                 />
               </TableCell>
             </TableRow>
+            <TableRow>
+              <TableCell colSpan={1}>Total</TableCell>
+              <TableCell align='center'>${total}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
@@ -73,11 +77,6 @@ export default function App() {
         <Button variant="contained" endIcon={<SendIcon />} onClick={handleEnter}>
           Enter
         </Button>
-      </Stack>
-      <Stack direction="column" alignItems="center">
-        <Typography variant="h6" align="center" sx={{ mt: 2, color: 'black' }}>
-          Total: ${total}
-        </Typography>
       </Stack>
     </>
   )
