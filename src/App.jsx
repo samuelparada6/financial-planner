@@ -18,19 +18,33 @@ import Paper from '@mui/material/Paper';
 import './App.css'
 
 export default function App() {
+
+    // Stores categories for expenses
+  const rows = [
+    { description: 'Groceries', expense: '' },
+    { description: 'Utilities', expense: '' },
+    { description: 'Rent', expense: '' },
+    { description: 'Transportation', expense: '' },
+    { description: 'Entertainment', expense: '' },
+  ];
+
   // State for user input
   const [userInput, setUserInput] = useState("");
   const [total, setTotal] = useState("");
+  // To hold all of the expenses
+  const [expenses, setExpenses] = useState(Array(rows.length).fill(""));
 
-  function handleInputChange(e) {
-    setUserInput(e.target.value);
+  function handleExpenseChange(idx, e) {
+    const newExpenses = [...expenses];
+    newExpenses[idx] = e.target.value;
+    setExpenses(newExpenses);
   }
 
   function handleEnter() {
     const num = Number(userInput);
     if (!(Number.isNaN(num))) {
       setTotal(num.toFixed(2));
-      setUserInput("");
+      setUserInput(num.toFixed(2));
     } else {
       setUserInput("");
     }
@@ -52,20 +66,22 @@ export default function App() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {rows.map((row, idx) => (
+              <TableRow key={row.description}>
+                <TableCell>{row.description}</TableCell>
+                <TableCell align="right">
+                  <OutlinedInput
+                    id="user-input"
+                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                    value={expenses[idx]}
+                    onChange={e => handleExpenseChange(idx, e)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
             <TableRow>
-              <TableCell>Groceries</TableCell>
-              <TableCell align="center">
-                <OutlinedInput
-                  id="user-input"
-                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                  value={userInput}
-                  onChange={handleInputChange}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={1}>Total</TableCell>
-              <TableCell align='center'>${total}</TableCell>
+              <TableCell />
+              <TableCell align="right">Total: ${total}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
