@@ -4,6 +4,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
@@ -28,8 +29,8 @@ export default function App() {
     setShowAmount(true);
   }
 
-  // Handles Cancel
-  function handleCancel() {
+  // Handles Clear
+  function handleClear() {
     setAmount("");
     setShowAmount(false);
   }
@@ -37,21 +38,20 @@ export default function App() {
   return (
     <>
       <div className="tester">
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Enter Amount</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            label="Amount"
             value={amount}
             onChange={(e) => handleChange(e.target.value)}
           />
-        </FormControl>
+        </Stack>
       </div>
       <div>
-        <Stack direction="row" spacing={2} sx={{ m: 1 }}>
-          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleCancel}>
-            Cancel
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }}>
+          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleClear}>
+            Clear
           </Button>
           <Button variant="contained" endIcon={<SendIcon />} onClick={handleEnter}>
             Enter
