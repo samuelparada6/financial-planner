@@ -27,8 +27,13 @@ export default function App() {
   }
 
   function handleEnter() {
-    setTotal(userInput);
-    setUserInput("");
+    const num = Number(userInput);
+    if (!(Number.isNaN(num))) {
+      setTotal(num.toFixed(2));
+      setUserInput("");
+    } else {
+      setUserInput("");
+    }
   }
 
   function handleClear() {
@@ -43,13 +48,13 @@ export default function App() {
           <TableHead>
             <TableRow>
               <TableCell>Description</TableCell>
-              <TableCell align="right">Input</TableCell>
+              <TableCell align="center">Price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>Amount</TableCell>
-              <TableCell align="right">
+              <TableCell>Groceries</TableCell>
+              <TableCell align="center">
                 <OutlinedInput
                   id="user-input"
                   startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -69,11 +74,11 @@ export default function App() {
           Enter
         </Button>
       </Stack>
-      {total && (
-        <Typography variant="h6" align="center" sx={{ mt: 2 }}>
+      <Stack direction="column" alignItems="center">
+        <Typography variant="h6" align="center" sx={{ mt: 2, color: 'black' }}>
           Total: ${total}
         </Typography>
-      )}
+      </Stack>
     </>
   )
 }
