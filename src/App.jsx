@@ -77,6 +77,13 @@ export default function App() {
                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
                     value={expenses[idx]}
                     onChange={e => handleExpenseChange(idx, e)}
+                    onFocus={() => {
+                      if (expenses[idx] === 0 || expenses[idx] === "0.00") {
+                        const newExpenses = [...expenses];
+                        newExpenses[idx] = "";
+                        setExpenses(newExpenses);
+                      }
+                    }}
                   />
                 </TableCell>
               </TableRow>
