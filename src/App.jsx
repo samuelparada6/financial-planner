@@ -60,7 +60,9 @@ export default function App() {
   function handleBlur(index) {
     const newExpenses = expenses.map((expense, idx) => {
       if (idx === index) {
-        const num = Number(expense);
+        // Checks for previous input and formats accordingly
+        const cleaned = typeof expense === "string" ? expense.replace(/,/g, "") : expense;
+        const num = Number(cleaned);
         return isNaN(num) ? "0.00"
           : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
