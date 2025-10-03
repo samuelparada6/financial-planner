@@ -40,14 +40,9 @@ export default function App() {
     newExpenses[idx] = e.target.value;
     setExpenses(newExpenses);
 
-    // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
-    // const formattedExpenses = newExpenses.map(expense => {
-    //   const num = Number(expense);
-    //   return isNaN(num) ? 0.00 : num.toFixed(2);
-    // });
-    // setExpenses(formattedExpenses);
-    // const total = formattedExpenses.reduce((acc, curr) => acc + Number(curr), 0);
-    // setTotal(total.toFixed(2));
+    // Calculates the total from the updated expenses
+    const total = newExpenses.reduce((acc, curr) => acc + Number(curr), 0);
+    setTotal(total.toFixed(2));
   }
 
   // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
