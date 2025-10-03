@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -80,16 +80,14 @@ export default function App() {
     setExpenses(newExpenses);
   }
 
-  useEffect(() => {
-    // Compare current expenses with budget limits and log if over budget
-    expenses.forEach((expense, idx) => {
-      const budget = budgetRows[idx]?.expense || 0;
-      if (parseFloat(expense.replace(/,/g, "")) > budget) {
-        console.warn(`Over budget in ${budgetRows[idx]?.description}: ${expense}`);
-      }
-    });
-
-  }, [expenses]);
+  // Memoized calculation to determine if each expense exceeds its budget
+  const overBudget = useMemo(() =>
+    expenses.map((expense, idx) => {
+      const cleaned = typeof expense === "string" ? expense.replace(/,/g, "") : expense;
+      return parseFloat(cleaned) > budgetRows[idx].expense;
+    }),
+    [expenses, budgetRows]
+  );
 
   return (
     <>
@@ -110,6 +108,7 @@ export default function App() {
                     id="user-input"
                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
                     value={expenses[idx]}
+                    error={overBudget[idx]}
                     onChange={e => handleExpenseChange(idx, e)}
                     onFocus={() => {
                       if (expenses[idx] === 0 || expenses[idx] === "0.00") {
@@ -122,7 +121,7 @@ export default function App() {
                   />
                 </TableCell>
               </TableRow>
-            ))}
+              ))}
             <TableRow>
               <TableCell />
               <TableCell align="right">Total: ${total}</TableCell>
