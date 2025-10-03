@@ -40,9 +40,14 @@ export default function App() {
     newExpenses[idx] = e.target.value;
     setExpenses(newExpenses);
 
-    // Calculates the total from the updated expenses
-    const total = newExpenses.reduce((acc, curr) => acc + Number(curr), 0);
-    setTotal(total.toFixed(2));
+    // Calculates the total from the updated expenses and formats with commas
+    const total = newExpenses.reduce((acc, curr) => {
+      // Handles removal of commas before parsing and calculating total
+      const cleaned = typeof curr === "string" ? curr.replace(/,/g, "") : curr;
+      const num = parseFloat(cleaned);
+      return !isNaN(num) ? acc + num : acc;
+    }, 0);
+    setTotal(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
   }
 
   // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
@@ -67,7 +72,8 @@ export default function App() {
     const newExpenses = expenses.map((expense, idx) => {
       if (idx === index) {
         const num = Number(expense);
-        return isNaN(num) ? 0.00 : num.toFixed(2);
+        return isNaN(num) ? "0.00"
+          : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
       return expense;
     });
