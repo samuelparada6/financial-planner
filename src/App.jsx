@@ -19,6 +19,8 @@ import './App.css'
 
 export default function App() {
 
+  document.title = "Budget Tracker";
+
   // Stores budget limits for the rows of expenses
   const budgetRows = [
     { description: 'Groceries', expense: 400.00 },
@@ -91,6 +93,7 @@ export default function App() {
 
   return (
     <>
+      <h1 style={{ color: "Black" }}>Budget Tracker</h1>
       <TableContainer component={Paper} sx={{ maxWidth: 500, margin: '32px auto' }}>
         <Table>
           <TableHead>
