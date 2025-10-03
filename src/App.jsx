@@ -19,7 +19,7 @@ import './App.css'
 
 export default function App() {
 
-    // Stores categories for expenses
+  // Stores categories for expenses
   const rows = [
     { description: 'Groceries', expense: 0.00 },
     { description: 'Utilities', expense: 0.00 },
@@ -28,34 +28,56 @@ export default function App() {
     { description: 'Entertainment', expense: 0.00 },
   ];
 
-    // State for total expenses
-    const [total, setTotal] = useState(0);
-    // State to hold all of the expenses, default to 0
-    const [expenses, setExpenses] = useState(Array(rows.length).fill(""));
+  // State for total expenses
+  const [total, setTotal] = useState(0);
+  // State to hold all of the expenses, default to 0
+  const [expenses, setExpenses] = useState(Array(rows.length).fill(""));
 
+  // Updates the expense value for a specific category by index
+  function handleExpenseChange(idx, e) {
     // Updates the expense value for a specific category by index
-    function handleExpenseChange(idx, e) {
-        const newExpenses = [...expenses];
-        newExpenses[idx] = e.target.value;
-        setExpenses(newExpenses);
-      }
+    const newExpenses = [...expenses];
+    newExpenses[idx] = e.target.value;
+    setExpenses(newExpenses);
 
     // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
-    function handleEnter() {
-          const newExpenses = expenses.map(expense => {
-            const num = Number(expense);
-            return isNaN(num) ? 0.00 : num.toFixed(2);
-          });
-          setExpenses(newExpenses);
-          const total = newExpenses.reduce((acc, curr) => acc + Number(curr), 0);
-          setTotal(total.toFixed(2));
-      }
+    // const formattedExpenses = newExpenses.map(expense => {
+    //   const num = Number(expense);
+    //   return isNaN(num) ? 0.00 : num.toFixed(2);
+    // });
+    // setExpenses(formattedExpenses);
+    // const total = formattedExpenses.reduce((acc, curr) => acc + Number(curr), 0);
+    // setTotal(total.toFixed(2));
+  }
 
-    // Resets all expense inputs and total to initial state
-    function handleClear() {
-      setExpenses(Array(rows.length).fill(0));
-      setTotal(0);
+  // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
+  function handleEnter() {
+        const newExpenses = expenses.map(expense => {
+          const num = Number(expense);
+          return isNaN(num) ? 0.00 : num.toFixed(2);
+        });
+        setExpenses(newExpenses);
+        const total = newExpenses.reduce((acc, curr) => acc + Number(curr), 0);
+        setTotal(total.toFixed(2));
+    }
+
+  // Resets all expense inputs and total to initial state
+  function handleClear() {
+    setExpenses(Array(rows.length).fill(0));
+    setTotal(0);
+    }
+
+  // Handles formatting on input blur
+  function handleBlur(index) {
+    const newExpenses = expenses.map((expense, idx) => {
+      if (idx === index) {
+        const num = Number(expense);
+        return isNaN(num) ? 0.00 : num.toFixed(2);
       }
+      return expense;
+    });
+    setExpenses(newExpenses);
+  }
 
   return (
     <>
@@ -84,6 +106,7 @@ export default function App() {
                         setExpenses(newExpenses);
                       }
                     }}
+                    onBlur={() => handleBlur(idx)}
                   />
                 </TableCell>
               </TableRow>
