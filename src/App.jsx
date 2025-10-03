@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,6 +18,15 @@ import Paper from '@mui/material/Paper';
 import './App.css'
 
 export default function App() {
+
+  // Stores budget limits for the rows of expenses
+  const budgetRows = [
+    { description: 'Groceries', expense: 400.00 },
+    { description: 'Utilities', expense: 200.00 },
+    { description: 'Rent', expense: 1200.00 },
+    { description: 'Transportation', expense: 50.00 },
+    { description: 'Entertainment', expense: 100.00 },
+  ];
 
   // Stores categories for expenses
   const rows = [
@@ -70,6 +79,17 @@ export default function App() {
     });
     setExpenses(newExpenses);
   }
+
+  useEffect(() => {
+    // Compare current expenses with budget limits and log if over budget
+    expenses.forEach((expense, idx) => {
+      const budget = budgetRows[idx]?.expense || 0;
+      if (parseFloat(expense.replace(/,/g, "")) > budget) {
+        console.warn(`Over budget in ${budgetRows[idx]?.description}: ${expense}`);
+      }
+    });
+
+  }, [expenses]);
 
   return (
     <>
