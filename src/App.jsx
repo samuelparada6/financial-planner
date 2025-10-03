@@ -50,17 +50,6 @@ export default function App() {
     setTotal(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
   }
 
-  // Formats all expenses as numbers, replaces invalid inputs with 0, and calculates the total
-  function handleEnter() {
-        const newExpenses = expenses.map(expense => {
-          const num = Number(expense);
-          return isNaN(num) ? 0.00 : num.toFixed(2);
-        });
-        setExpenses(newExpenses);
-        const total = newExpenses.reduce((acc, curr) => acc + Number(curr), 0);
-        setTotal(total.toFixed(2));
-    }
-
   // Resets all expense inputs and total to initial state
   function handleClear() {
     setExpenses(Array(rows.length).fill(0));
@@ -122,9 +111,6 @@ export default function App() {
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }}>
         <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleClear}>
           Clear
-        </Button>
-        <Button variant="contained" endIcon={<SendIcon />} onClick={handleEnter}>
-          Enter
         </Button>
       </Stack>
     </>
