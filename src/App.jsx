@@ -3,6 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,7 +47,6 @@ export default function App() {
 
   // Updates the expense value for a specific category by index
   function handleExpenseChange(idx, e) {
-    // Updates the expense value for a specific category by index
     const newExpenses = [...expenses];
     newExpenses[idx] = e.target.value;
     setExpenses(newExpenses);
@@ -91,10 +91,12 @@ export default function App() {
     [expenses, budgetRows]
   );
 
+  const budgetTotal = budgetRows.reduce((acc, row) => acc + row.expense, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
   return (
     <>
       <h1 style={{ color: "Black" }}>Budget Tracker</h1>
-      <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }}>
+      <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }} alignItems="flex-start">
         <TableContainer component={Paper} sx={{ maxWidth: 300, margin: '32px auto' }}>
           <Table>
             <TableHead>
@@ -106,6 +108,25 @@ export default function App() {
                 <TableCell align="center">Price</TableCell>
               </TableRow>
             </TableHead>
+            <TableBody>
+              {budgetRows.map((row, idx) => (
+                <TableRow key={row.description}>
+                  <TableCell>{row.description}</TableCell>
+                 <TableCell align="right">
+                  <Typography variant="body1">
+                    ${row.expense.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}
+                  </Typography>
+                </TableCell>
+                </TableRow>
+                ))}
+              <TableRow>
+                <TableCell />
+                <TableCell align="right">Total: ${budgetTotal}</TableCell>
+              </TableRow>
+            </TableBody>
           </Table>
         </TableContainer>
         <TableContainer component={Paper} sx={{ maxWidth: 500, margin: '32px auto' }}>
