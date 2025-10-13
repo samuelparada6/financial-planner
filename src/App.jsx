@@ -94,45 +94,57 @@ export default function App() {
   return (
     <>
       <h1 style={{ color: "Black" }}>Budget Tracker</h1>
-      <TableContainer component={Paper} sx={{ maxWidth: 500, margin: '32px auto' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Description</TableCell>
-              <TableCell align="center">Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row, idx) => (
-              <TableRow key={row.description}>
-                <TableCell>{row.description}</TableCell>
-                <TableCell align="right">
-                  <OutlinedInput
-                    id="user-input"
-                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                    value={expenses[idx]}
-                    error={overBudget[idx]}
-                    onChange={e => handleExpenseChange(idx, e)}
-                    onFocus={() => {
-                      if (expenses[idx] === 0 || expenses[idx] === "0.00") {
-                        const newExpenses = [...expenses];
-                        newExpenses[idx] = "";
-                        setExpenses(newExpenses);
-                      }
-                    }}
-                    onBlur={() => handleBlur(idx)}
-                  />
-                </TableCell>
-              </TableRow>
-              ))}
-            <TableRow>
-              <TableCell />
-              <TableCell align="right">Total: ${total}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }}>
+        <TableContainer component={Paper} sx={{ maxWidth: 300, margin: '32px auto' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Budget Limits</TableCell>
+                <TableCell align="center">Price</TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+        </TableContainer>
+        <TableContainer component={Paper} sx={{ maxWidth: 500, margin: '32px auto' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Description</TableCell>
+                <TableCell align="center">Price</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, idx) => (
+                <TableRow key={row.description}>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell align="right">
+                    <OutlinedInput
+                      id="user-input"
+                      startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                      value={expenses[idx]}
+                      error={overBudget[idx]}
+                      onChange={e => handleExpenseChange(idx, e)}
+                      onFocus={() => {
+                        if (expenses[idx] === 0 || expenses[idx] === "0.00") {
+                          const newExpenses = [...expenses];
+                          newExpenses[idx] = "";
+                          setExpenses(newExpenses);
+                        }
+                      }}
+                      onBlur={() => handleBlur(idx)}
+                    />
+                  </TableCell>
+                </TableRow>
+                ))}
+              <TableRow>
+                <TableCell />
+                <TableCell align="right">Total: ${total}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
+      <Stack direction="row" spacing={2} justifyContent="right" sx={{ m: 1 }}>
         <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleClear}>
           Clear
         </Button>
