@@ -9,6 +9,12 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -95,7 +101,30 @@ export default function App() {
 
   return (
     <>
-      <h1 style={{ color: "Black" }}>Budget Tracker</h1>
+        {/* Full-bleed AppBar with centered content. Using position fixed so it stays visible on scroll.
+            We place a Container inside the Toolbar to keep the inner content centered while the
+            AppBar background spans the full viewport. A spacer Toolbar follows to push page content down. */}
+        <AppBar position="fixed" sx={{ width: '100%', left: 0, right: 0 }}> 
+          <Toolbar disableGutters>
+            <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Budget Tracker
+              </Typography>
+              <Button color="inherit">Login</Button>
+            </Container>
+          </Toolbar>
+        </AppBar>
+        {/* Spacer so content is not hidden under the fixed AppBar */}
+        <Toolbar />
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }} alignItems="flex-start">
         <TableContainer component={Paper} sx={{ maxWidth: 300, margin: '32px auto' }}>
           <Table>
