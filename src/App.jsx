@@ -22,6 +22,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import './App.css'
 
 export default function App() {
@@ -45,6 +47,16 @@ export default function App() {
     { description: 'Transportation', expense: 0.00 },
     { description: 'Entertainment', expense: 0.00 },
   ];
+
+  // Handles Menu functionality for AppBar
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   // State for total expenses
   const [total, setTotal] = useState(0);
@@ -114,7 +126,22 @@ export default function App() {
                 aria-label="menu"
                 sx={{ mr: 2 }}
               >
-                <MenuIcon />
+                <MenuIcon onClick={handleClick} />
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      'aria-labelledby': 'basic-button',
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Menu>
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 Budget Tracker
