@@ -1,29 +1,25 @@
 import { useState, useMemo } from 'react';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Button,
+  Typography,
+  Stack,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Menu,
+  MenuItem,
+  OutlinedInput,
+  InputAdornment,
+} from '@mui/material';
+import { Delete as DeleteIcon, Menu as MenuIcon } from '@mui/icons-material';
 import './App.css'
 
 export default function App() {
@@ -31,22 +27,24 @@ export default function App() {
   document.title = "Budget Tracker";
 
   // Stores budget limits for the rows of expenses
-  const budgetRows = [
+  const budgetRows = useMemo(() => ([
     { description: 'Groceries', expense: 400.00 },
     { description: 'Utilities', expense: 200.00 },
     { description: 'Rent', expense: 1200.00 },
     { description: 'Transportation', expense: 50.00 },
     { description: 'Entertainment', expense: 100.00 },
-  ];
+  ]), []);
+
 
   // Stores categories for expenses
-  const rows = [
+  const rows = useMemo(() => ([
     { description: 'Groceries', expense: 0.00 },
     { description: 'Utilities', expense: 0.00 },
     { description: 'Rent', expense: 0.00 },
     { description: 'Transportation', expense: 0.00 },
     { description: 'Entertainment', expense: 0.00 },
-  ];
+  ]), []);
+
 
   // Handles Menu functionality for AppBar
   const [anchorEl, setAnchorEl] = useState(null);
@@ -125,24 +123,25 @@ export default function App() {
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 2 }}
+                onClick={handleClick}
               >
-                <MenuIcon onClick={handleClick} />
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  slotProps={{
-                    list: {
-                      'aria-labelledby': 'basic-button',
-                    },
-                  }}
-                >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
-                </Menu>
+                <MenuIcon />
               </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                slotProps={{
+                  list: {
+                    'aria-labelledby': 'basic-button',
+                  },
+                }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Logout</MenuItem>
+              </Menu>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 Budget Tracker
               </Typography>
