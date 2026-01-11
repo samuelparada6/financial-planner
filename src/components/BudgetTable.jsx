@@ -9,6 +9,7 @@ import {
   Paper,
 } from '@mui/material';
 
+// Displays the Budget table with static values
 export default function BudgetTable({ budgetRows, budgetTotal }) {
 
   return (

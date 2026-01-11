@@ -11,7 +11,9 @@ import {
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 
+// Displays the AppBar header with menu
 export default function AppBarHeader() {
+    
     // Handles Menu functionality for AppBar
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

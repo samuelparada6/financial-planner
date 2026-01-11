@@ -11,7 +11,7 @@ import BudgetTable from './components/BudgetTable';
 import ExpensesTable from './components/ExpensesTable';
 
 export default function App() {
-
+  
   document.title = "Budget Tracker";
 
   // Stores categories for expenses

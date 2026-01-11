@@ -10,6 +10,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 
+// Displays the Expenses table with editable inputs
 export default function ExpensesTable({ rows, expenses, overBudget, total, handleExpenseChange, handleFocus, handleBlur }) {
 
     return (
