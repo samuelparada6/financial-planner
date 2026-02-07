@@ -14,7 +14,7 @@ export default function BudgetTable({ budgetRows, budgetTotal }) {
 
   return (
     <>
-        <TableContainer component={Paper} sx={{ maxWidth: 300, margin: '32px auto' }}>
+        <TableContainer component={Paper} sx={{ maxWidth: 500, margin: '32px auto' }}>
             <Table>
                 <TableHead>
                     <TableRow>

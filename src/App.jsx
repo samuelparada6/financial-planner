@@ -4,7 +4,7 @@ import {
   Button,
   Stack,
 } from '@mui/material';
-import { Delete as DeleteIcon, Menu as MenuIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon, Menu as MenuIcon, Edit as EditIcon } from '@mui/icons-material';
 import './App.css'
 import AppBarHeader from './components/AppBarHeader';
 import BudgetTable from './components/BudgetTable';
@@ -99,7 +99,12 @@ export default function App() {
       <AppBarHeader />
        <Toolbar />
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ m: 1 }} alignItems="flex-start">
-        <BudgetTable budgetRows={budgetRows} budgetTotal={budgetTotal} />
+        <Stack spacing={1} alignItems="flex-start">
+          <BudgetTable budgetRows={budgetRows} budgetTotal={budgetTotal}/>
+          <Button variant="outlined" size="small" startIcon={<EditIcon />}>
+            Edit
+          </Button>
+        </Stack>
         <ExpensesTable
           rows={rows}
           expenses={expenses}
