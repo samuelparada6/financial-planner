@@ -7,10 +7,15 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TextField,
+  OutlinedInput,
+  InputAdornment
 } from '@mui/material';
 
 // Displays the Budget table with static values
-export default function BudgetTable({ budgetRows, budgetTotal }) {
+export default function BudgetTable({ budgetRows, tempBudget, budgetTotal, editingBudget, handleEditTempBudget, handleBlur, handleFocus }) {
+    
+    const rows = editingBudget ? tempBudget : budgetRows;
 
   return (
     <>
@@ -26,16 +31,20 @@ export default function BudgetTable({ budgetRows, budgetTotal }) {
                     </TableRow>
                 </TableHead>
             <TableBody>
-                {budgetRows.map((row, idx) => (
+                {rows.map((row, idx) => (
                 <TableRow key={row.description}>
                     <TableCell>{row.description}</TableCell>
                     <TableCell align="right">
-                        <Typography variant="body1">
-                            ${row.expense.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            })}
-                        </Typography>
+                        <OutlinedInput
+                            value={row.expense}
+                            readOnly={!editingBudget}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                            onChange={(e) => handleEditTempBudget(idx, e.target.value)}
+                            size="small"
+                            onBlur={() => editingBudget && handleBlur(idx)}
+                            onFocus={() => editingBudget && handleFocus(idx)}
+                            fullWidth
+                        />
                     </TableCell>
                 </TableRow>
                 ))}
