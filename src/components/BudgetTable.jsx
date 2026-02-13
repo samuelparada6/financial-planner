@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 // Displays the Budget table with static values
-export default function BudgetTable({ budgetRows, tempBudget, budgetTotal, editingBudget, handleEditTempBudget, handleBlur, handleFocus }) {
+export default function BudgetTable({ budgetRows, tempBudget, budgetTotal, editingBudget, handleEditTempBudget, handleBlur, handleFocus, setTempBudget }) {
     
     const rows = editingBudget ? tempBudget : budgetRows;
 
@@ -41,8 +41,8 @@ export default function BudgetTable({ budgetRows, tempBudget, budgetTotal, editi
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             onChange={(e) => handleEditTempBudget(idx, e.target.value)}
                             size="small"
-                            onBlur={() => editingBudget && handleBlur(idx)}
-                            onFocus={() => editingBudget && handleFocus(idx)}
+                            onBlur={() => editingBudget && handleBlur(setTempBudgetidx)}
+                            onFocus={() => editingBudget && handleFocus(setTempBudget, idx)}
                             fullWidth
                         />
                     </TableCell>

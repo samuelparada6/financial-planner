@@ -30,6 +30,7 @@ export default function App() {
     { description: 'Transportation', expense: 0 },
     { description: 'Entertainment', expense: 0 },
   ]);
+
   // State for total expenses
   const [expenseTotal, setExpenseTotal] = useState(0);
   // State for budget total
@@ -39,11 +40,83 @@ export default function App() {
   // State for the temporary Budget
   const [tempBudget, setTempBudget] = useState([]);
 
-   // Resets all expense inputs and total to initial state
-  function handleClear() {
-    setExpenseRows(expenseRows.map(row => ({ ...row, expense: 0 })));
-    setExpenseTotal(0);
+  // Resets all expense inputs and total to initial state
+  function handleClearRows(setRows, setTotal) {
+    setRows(prev => prev.map(row => ({ ...row, expense: 0 })));
+    setTotal(0);
   }
+  
+  // Clears the expense value when focused if it's 0 or "0.00"
+  function handleRowFocus(setter, index) {
+      setter(prev =>
+        prev.map((row, idx) =>
+          idx === index && (row.expense === 0 || row.expense === "0.00") ? { ...row, expense: "" } : row
+        )
+      );
+  }
+
+  // Handles formatting on input blur
+  function handleRowBlur(setter, index) {
+    setter(prev =>
+      prev.map((row, idx) => {
+        if (idx !== index) return row;
+
+        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, ""): row.expense;
+
+        const num = Number(cleaned);
+
+        return { ...row, expense: isNaN(num) ? "0.00" : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,}),};
+      })
+    );
+  }
+
+  // Memoized calculation to determine if each expense exceeds its budget
+  const overBudget = useMemo(() =>
+      expenseRows.map((row, idx) => {
+      const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
+      return parseFloat(cleaned) > budgetRows[idx].expense;
+      }),
+      [expenseRows, budgetRows]
+  );
+
+  // Handle clicking the Edit button
+  function handleClickEditBudget() {
+    setTempBudget(budgetRows.map(row => ({ ...row })));
+    setEditingBudget(true);
+  };
+
+  // Handle active editing of the temporary budget
+  function handleEditTempBudget(idx, e) {
+    setTempBudget(prev => {
+      const updated = [...prev];
+      updated[idx] = {
+        ...updated[idx],
+        expense: e,
+      };
+      return updated;
+    });
+  };
+
+  // Handle Save budget
+  function handleSaveBudget() {
+    setBudgetRows(tempBudget);
+    setTempBudget(Array(budgetRows.length).fill(""));
+    setEditingBudget(false);
+
+    // Calculate budget total
+    const budgetTotal = tempBudget.reduce((acc, row) => {
+      const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
+      const num = parseFloat(cleaned);
+      return acc + (isNaN(num) ? 0 : num);
+    }, 0);
+    setBudgetTotal(budgetTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+  };
+
+  // Handle Cancel changes to budget
+  function handleCancelBudget() {
+    setTempBudget(Array(budgetRows.length).fill(""));
+    setEditingBudget(false);
+  };
 
   // Updates the expense value for a specific category by index
   function handleExpenseChange(idx, e) {
@@ -61,102 +134,6 @@ export default function App() {
     setExpenseTotal(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
   } 
 
-    // Clears the expense value when focused if it's 0 or "0.00"
-    function handleExpenseFocus(index) {
-        if (expenseRows[index].expense === 0 || expenseRows[index].expense === "0.00") {
-            const newExpenses = [...expenseRows];
-            newExpenses[index] = { ...newExpenses[index], expense: "" };
-            setExpenseRows(newExpenses);
-        }
-    }
-
-    // Handles formatting on input blur
-    function handleExpenseBlur(index) {
-      setExpenseRows(prev =>
-        prev.map((row, idx) => {
-          if (idx !== index) return row;
-
-          const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, ""): row.expense;
-
-          const num = Number(cleaned);
-
-          return { ...row, expense: isNaN(num) ? "0.00" : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,}),};
-        })
-      );
-    }
-
-
-    // Memoized calculation to determine if each expense exceeds its budget
-    const overBudget = useMemo(() =>
-        expenseRows.map((row, idx) => {
-        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
-        return parseFloat(cleaned) > budgetRows[idx].expense;
-        }),
-        [expenseRows, budgetRows]
-    );
-
-    // Handle clicking the Edit button
-    function handleClickEditBudget() {
-      setTempBudget(budgetRows.map(row => ({ ...row })));
-      setEditingBudget(true);
-    };
-
-    // Handle active editing of the temporary budget
-    function handleEditTempBudget(idx, e) {
-      setTempBudget(prev => {
-        const updated = [...prev];
-        updated[idx] = {
-          ...updated[idx],
-          expense: e,
-        };
-        return updated;
-      });
-    };
-
-    // Handle Save budget
-    function handleSaveBudget() {
-      setBudgetRows(tempBudget);
-      setTempBudget(Array(budgetRows.length).fill(""));
-      setEditingBudget(false);
-
-      // Calculate budget total
-      const budgetTotal = tempBudget.reduce((acc, row) => {
-        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
-        const num = parseFloat(cleaned);
-        return acc + (isNaN(num) ? 0 : num);
-      }, 0);
-      setBudgetTotal(budgetTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-    };
-
-    // Handle Cancel changes to budget
-    function handleCancelBudget() {
-      setTempBudget(Array(budgetRows.length).fill(""));
-      setEditingBudget(false);
-    };
-
-    // Clears the budget row value when focused if it's 0 or "0.00"
-    function handleBudgetFocus(index) {
-        setTempBudget(prev =>
-          prev.map((row, idx) =>
-            idx === index && (row.expense === 0 || row.expense === "0.00")
-              ? { ...row, expense: "" }
-              : row
-          )
-        );
-    }
-
-    // Handles formatting on input blur
-    function handleBudgetBlur(index) {
-      setTempBudget(prev => prev.map((row, idx) => {
-        if (idx !== index) return row;
-        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
-        const num = Number(cleaned);
-        return { ...row, expense: isNaN(num) ? "0.00" : num.toLocaleString(undefined, {
-          minimumFractionDigits: 2, maximumFractionDigits: 2, }), };
-        })
-      );
-    }
-
   return (
     <>
       <AppBarHeader />
@@ -169,19 +146,25 @@ export default function App() {
             budgetTotal={budgetTotal}
             editingBudget={editingBudget}
             handleEditTempBudget={handleEditTempBudget}
-            handleBlur={handleBudgetBlur}
-            handleFocus={handleBudgetFocus}
+            handleBlur={handleRowBlur}
+            handleFocus={handleRowFocus}
+            setTempBudget={setTempBudget}
           />
           {/* Display depends on whether 'Edit' has been clicked or not */}
           {!editingBudget ? (
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={handleClickEditBudget}
-            >
-              Edit
-            </Button>
+            <Stack direction="row" spacing={2} justifyContent="right" sx={{ m: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<EditIcon />}
+                onClick={handleClickEditBudget}
+              >
+                Edit
+              </Button>
+              <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleClearRows(setBudgetRows, setBudgetTotal)}>
+                Clear
+              </Button>
+            </Stack>
           ) : (
             <Stack direction="row" spacing={1}>
               <Button variant="contained" size="small" onClick={handleSaveBudget}>
@@ -198,12 +181,13 @@ export default function App() {
           overBudget={overBudget}
           total={expenseTotal}
           handleExpenseChange={handleExpenseChange}
-          handleFocus={handleExpenseFocus}
-          handleBlur={handleExpenseBlur}
+          handleFocus={handleRowFocus}
+          handleBlur={handleRowBlur}
+          setExpenseRows={setExpenseRows}
         />
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="right" sx={{ m: 1 }}>
-        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={handleClear}>
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleClearRows(setExpenseRows, setExpenseTotal)}>
           Clear
         </Button>
       </Stack>
