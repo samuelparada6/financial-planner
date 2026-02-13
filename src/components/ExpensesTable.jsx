@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 // Displays the Expenses table with editable inputs
-export default function ExpensesTable({ rows, expenses, overBudget, total, handleExpenseChange, handleFocus, handleBlur }) {
+export default function ExpensesTable({ expenses, overBudget, total, handleExpenseChange, handleFocus, handleBlur }) {
 
     return (
         <>
@@ -27,14 +27,14 @@ export default function ExpensesTable({ rows, expenses, overBudget, total, handl
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row, idx) => (
+                        {expenses.map((row, idx) => (
                             <TableRow key={row.description}>
                                 <TableCell>{row.description}</TableCell>
                                 <TableCell align="right">
                                     <OutlinedInput
                                         id="user-input"
                                         startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                        value={expenses[idx]}
+                                        value={row.expense}
                                         error={overBudget[idx]}
                                         onChange={e => handleExpenseChange(idx, e)}
                                         onFocus={() => handleFocus(idx)}

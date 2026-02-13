@@ -13,24 +13,15 @@ import ExpensesTable from './components/ExpensesTable';
 export default function App() {
   
   document.title = "Budget Tracker";
-
-  // Stores categories for expenses
-  const rows = useMemo(() => ([
-    { description: 'Groceries', expense: 0.00 },
-    { description: 'Utilities', expense: 0.00 },
-    { description: 'Rent', expense: 0.00 },
-    { description: 'Transportation', expense: 0.00 },
-    { description: 'Entertainment', expense: 0.00 },
-  ]), []);
   
-  // State for total expenses
-  const [total, setTotal] = useState(0);
-  // State for budget total
-  const [budgetTotal, setBudgetTotal] = useState(0);
-  // State to hold all of the expenses, default to 0
-  const [expenses, setExpenses] = useState(Array(rows.length).fill(""));
-  // State for Editing the Budget
-  const [editingBudget, setEditingBudget] = useState(false);
+  // State to hold all of the expenses, default to 0 for each category
+  const [expenseRows, setExpenseRows] = useState([
+    { description: 'Groceries', expense: 0 },
+    { description: 'Utilities', expense: 0 },
+    { description: 'Rent', expense: 0 },
+    { description: 'Transportation', expense: 0 },
+    { description: 'Entertainment', expense: 0 },
+  ]);
   // State for the updated Budget
   const [budgetRows, setBudgetRows] = useState([
     { description: 'Groceries', expense: 0 },
@@ -39,62 +30,69 @@ export default function App() {
     { description: 'Transportation', expense: 0 },
     { description: 'Entertainment', expense: 0 },
   ]);
+  // State for total expenses
+  const [expenseTotal, setExpenseTotal] = useState(0);
+  // State for budget total
+  const [budgetTotal, setBudgetTotal] = useState(0);
+  // State for Editing the Budget
+  const [editingBudget, setEditingBudget] = useState(false);
   // State for the temporary Budget
   const [tempBudget, setTempBudget] = useState([]);
 
    // Resets all expense inputs and total to initial state
   function handleClear() {
-    setExpenses(Array(rows.length).fill(0));
-    setTotal(0);
+    setExpenseRows(expenseRows.map(row => ({ ...row, expense: 0 })));
+    setExpenseTotal(0);
   }
 
   // Updates the expense value for a specific category by index
   function handleExpenseChange(idx, e) {
-    const newExpenses = [...expenses];
-    newExpenses[idx] = e.target.value;
-    setExpenses(newExpenses);
+    const newExpenses = [...expenseRows];
+    newExpenses[idx] = { ...newExpenses[idx], expense: e.target.value };
+    setExpenseRows(newExpenses);
 
     // Calculates the total from the updated expenses and formats with commas
     const total = newExpenses.reduce((acc, curr) => {
       // Handles removal of commas before parsing and calculating total
-      const cleaned = typeof curr === "string" ? curr.replace(/,/g, "") : curr;
+      const cleaned = typeof curr.expense === "string" ? curr.expense.replace(/,/g, "") : curr.expense;
       const num = parseFloat(cleaned);
       return !isNaN(num) ? acc + num : acc;
     }, 0);
-    setTotal(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+    setExpenseTotal(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
   } 
 
     // Clears the expense value when focused if it's 0 or "0.00"
     function handleExpenseFocus(index) {
-        if (expenses[index] === 0 || expenses[index] === "0.00") {
-            const newExpenses = [...expenses];
-            newExpenses[index] = "";
-            setExpenses(newExpenses);
+        if (expenseRows[index].expense === 0 || expenseRows[index].expense === "0.00") {
+            const newExpenses = [...expenseRows];
+            newExpenses[index] = { ...newExpenses[index], expense: "" };
+            setExpenseRows(newExpenses);
         }
     }
 
     // Handles formatting on input blur
     function handleExpenseBlur(index) {
-        const newExpenses = expenses.map((expense, idx) => {
-        if (idx === index) {
-            // Checks for previous input and formats accordingly
-            const cleaned = typeof expense === "string" ? expense.replace(/,/g, "") : expense;
-            const num = Number(cleaned);
-            return isNaN(num) ? "0.00"
-            : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-        return expense;
-        });
-        setExpenses(newExpenses);
+      setExpenseRows(prev =>
+        prev.map((row, idx) => {
+          if (idx !== index) return row;
+
+          const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, ""): row.expense;
+
+          const num = Number(cleaned);
+
+          return { ...row, expense: isNaN(num) ? "0.00" : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,}),};
+        })
+      );
     }
+
 
     // Memoized calculation to determine if each expense exceeds its budget
     const overBudget = useMemo(() =>
-        expenses.map((expense, idx) => {
-        const cleaned = typeof expense === "string" ? expense.replace(/,/g, "") : expense;
+        expenseRows.map((row, idx) => {
+        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
         return parseFloat(cleaned) > budgetRows[idx].expense;
         }),
-        [expenses, budgetRows]
+        [expenseRows, budgetRows]
     );
 
     // Handle clicking the Edit button
@@ -196,10 +194,9 @@ export default function App() {
           )}
         </Stack>
         <ExpensesTable
-          rows={rows}
-          expenses={expenses}
+          expenses={expenseRows}
           overBudget={overBudget}
-          total={total}
+          total={expenseTotal}
           handleExpenseChange={handleExpenseChange}
           handleFocus={handleExpenseFocus}
           handleBlur={handleExpenseBlur}
