@@ -25,6 +25,8 @@ export default function App() {
   
   // State for total expenses
   const [total, setTotal] = useState(0);
+  // State for budget total
+  const [budgetTotal, setBudgetTotal] = useState(0);
   // State to hold all of the expenses, default to 0
   const [expenses, setExpenses] = useState(Array(rows.length).fill(""));
   // State for Editing the Budget
@@ -86,8 +88,6 @@ export default function App() {
         setExpenses(newExpenses);
     }
 
-    const budgetTotal = budgetRows.reduce((acc, row) => acc + row.expense, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
     // Memoized calculation to determine if each expense exceeds its budget
     const overBudget = useMemo(() =>
         expenses.map((expense, idx) => {
@@ -120,6 +120,14 @@ export default function App() {
       setBudgetRows(tempBudget);
       setTempBudget(Array(budgetRows.length).fill(""));
       setEditingBudget(false);
+
+      // Calculate budget total
+      const budgetTotal = tempBudget.reduce((acc, row) => {
+        const cleaned = typeof row.expense === "string" ? row.expense.replace(/,/g, "") : row.expense;
+        const num = parseFloat(cleaned);
+        return acc + (isNaN(num) ? 0 : num);
+      }, 0);
+      setBudgetTotal(budgetTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
     };
 
     // Handle Cancel changes to budget
